@@ -1,123 +1,99 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>출결 정보 조회</title>
+  <meta charset="UTF-8" />
+  <title>출결 조회</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
-      font-family: 'Pretendard', sans-serif;
-      background: #f9f9f9;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 2rem;
     }
     h1 {
-      color: #2c3e50;
+      color: #343a40;
     }
-    .form-box {
-      background: #fff;
+    .container {
+      background: white;
       padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
       max-width: 400px;
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-    input {
       width: 100%;
-      padding: 0.6rem;
-      margin-top: 0.4rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
     }
-    button {
-      margin-top: 1.5rem;
+    input, button {
       padding: 0.8rem;
       width: 100%;
-      background: #3498db;
+      margin-top: 1rem;
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #0d6efd;
       color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 1rem;
       cursor: pointer;
     }
     button:hover {
-      background: #2980b9;
+      background-color: #0b5ed7;
     }
     .result {
       margin-top: 2rem;
-      background: #ecf0f1;
-      padding: 1rem;
-      border-radius: 10px;
-      width: 100%;
-      max-width: 400px;
+      font-size: 1.1rem;
+      color: #212529;
+    }
+    .label {
+      font-weight: bold;
+      color: #495057;
     }
   </style>
 </head>
 <body>
-  <h1>출결 정보 조회</h1>
-  <div class="form-box">
-    <label for="name">이름</label>
-    <input type="text" id="name" placeholder="홍길동" required>
-
-    <label for="phone">전화번호</label>
-    <input type="text" id="phone" placeholder="010-1234-5678" required>
-
-    <button onclick="searchAttendance()">조회하기</button>
-  </div>
-  <div class="result" id="resultBox" style="display:none;">
-    <p><strong>결석:</strong> <span id="absent"></span></p>
-    <p><strong>지각:</strong> <span id="late"></span></p>
-    <p><strong>조퇴:</strong> <span id="early"></span></p>
+  <h1>출결 조회</h1>
+  <div class="container">
+    <input type="text" id="name" placeholder="이름 입력" />
+    <input type="text" id="phone" placeholder="전화번호 입력 (예: 01012345678)" />
+    <button onclick="lookup()">조회하기</button>
+    <div class="result" id="result"></div>
   </div>
 
   <script>
-    const SHEET_ID = '1-cr-7T81DzSeXCncyKIV7bMKow9xh46fPQ3ua5LScXg'; // 예: '1abcdEfghIJkLmNOPQRsTuVWxyz'
+    const SHEET_ID = '1-cr-7T81DzSeXCncyKIV7bMKow9xh46fPQ3ua5LScXg';
     const API_KEY = 'AIzaSyDn8k00-GFBl0uiip3-gCEwiza-57J7-F0';
-    const RANGE = '시트1!A2:E'; // 시트 이름에 따라 수정
-    
-    function searchAttendance() {
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-    
+    const RANGE = '시트1!A2:E'; // A: 이름, B: 전화번호, C: 결석, D: 지각, E: 조퇴
+
+    async function lookup() {
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const resultDiv = document.getElementById("result");
+
       if (!name || !phone) {
-        alert('이름과 전화번호를 모두 입력하세요.');
+        resultDiv.innerHTML = "이름과 전화번호를 모두 입력해주세요.";
         return;
       }
-    
-      gapi.load('client', () => {
-        gapi.client.init({
-          apiKey: API_KEY
-        }).then(() => {
-          return gapi.client.request({
-            path: `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}`
-          });
-        }).then(response => {
-          const rows = response.result.values;
-          const matched = rows.find(row => row[0] === name && row[1] === phone);
-    
-          if (matched) {
-            document.getElementById('absent').textContent = matched[2] || '없음';
-            document.getElementById('late').textContent = matched[3] || '없음';
-            document.getElementById('early').textContent = matched[4] || '없음';
-            document.getElementById('resultBox').style.display = 'block';
-          } else {
-            alert('일치하는 정보를 찾을 수 없습니다.');
-            document.getElementById('resultBox').style.display = 'none';
-          }
-        }).catch(err => {
-          console.error('오류 발생:', err);
-          alert('데이터를 불러오는 데 실패했습니다.');
-        });
-      });
-    }
 
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const rows = data.values;
+
+      const match = rows.find(row => row[0] === name && row[1] === phone);
+      if (match) {
+        const [ , , absent, late, earlyLeave ] = match;
+        resultDiv.innerHTML = `
+          <p><span class="label">결석:</span> ${absent || '없음'}</p>
+          <p><span class="label">지각:</span> ${late || '없음'}</p>
+          <p><span class="label">조퇴:</span> ${earlyLeave || '없음'}</p>
+        `;
+      } else {
+        resultDiv.innerHTML = "일치하는 정보를 찾을 수 없습니다.";
+      }
+    }
   </script>
-  <script src="https://apis.google.com/js/api.js"></script>
 </body>
 </html>
