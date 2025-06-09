@@ -87,7 +87,7 @@
   <script>
     function getAttendance(name, phone) {
       const script = document.createElement('script');
-      const url = `https://script.google.com/macros/s/AKfycbwn5daNAvW8r5h6XL0L83v6dhgeNiUrIPgFT0Gdv_4KBe5q_AYd43uDpxq_b68a3Dyr/exec?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&callback=handleResponse`;
+      const url = `https://script.google.com/macros/s/AKfycbwHDHDGoiP7o_Gdf9jJ0m3Ps8KI-z5y81lQRTGhK7U4w5b26ZTHG8Y4NJeGhKTgUYdm/exec?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&callback=handleResponse`;
       script.src = url;
       document.body.appendChild(script);
     }
