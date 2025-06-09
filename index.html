@@ -1,238 +1,123 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>출결 확인 페이지</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>출결 확인 시스템</title>
   <style>
     body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      color: #333;
-      overflow: hidden;
-    }
-    .container {
-      background-color: #ffffff;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      width: 90%;
-      max-width: 500px;
-      position: relative;
-      overflow: hidden;
-    }
-    .container::before {
-      content: '';
-      position: absolute;
-      top: -50px;
-      left: -50px;
-      width: 150px;
-      height: 150px;
-      background-color: rgba(106, 17, 203, 0.1);
-      border-radius: 50%;
-      z-index: 0;
-    }
-    .container::after {
-      content: '';
-      position: absolute;
-      bottom: -50px;
-      right: -50px;
-      width: 150px;
-      height: 150px;
-      background-color: rgba(37, 117, 252, 0.1);
-      border-radius: 50%;
-      z-index: 0;
-    }
-    h1 {
-      color: #6a11cb;
-      margin-bottom: 30px;
-      font-weight: 700;
-      position: relative;
-      z-index: 1;
-    }
-    .input-group {
-      margin-bottom: 20px;
-      text-align: left;
-      position: relative;
-      z-index: 1;
-    }
-    .input-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: #555;
-    }
-    .input-group input[type="text"],
-    .input-group input[type="tel"] {
-      width: calc(100% - 20px);
-      padding: 12px 10px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 16px;
-      box-sizing: border-box;
-      transition: border-color 0.3s ease;
-    }
-    .input-group input:focus {
-      border-color: #2575fc;
-      outline: none;
-    }
-    button {
-      background-color: #2575fc;
-      color: white;
-      padding: 15px 30px;
-      border: none;
-      border-radius: 8px;
-      font-size: 18px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      font-weight: 600;
-      position: relative;
-      z-index: 1;
-    }
-    button:hover {
-      background-color: #1a5ac9;
-      transform: translateY(-2px);
-    }
-    #result {
-      margin-top: 30px;
-      padding: 20px;
-      background-color: #f0f8ff;
-      border-radius: 10px;
-      border: 1px solid #e0efff;
-      min-height: 80px;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f7f9fc;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-      position: relative;
-      z-index: 1;
+      padding: 40px;
     }
-    #result p {
-      margin: 8px 0;
-      font-size: 18px;
+
+    .container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
       color: #333;
-      font-weight: 500;
-      word-break: keep-all;
     }
-    #result span {
-      font-weight: 700;
-      color: #6a11cb;
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
     }
-    .error-message {
-      color: #e74c3c;
-      font-weight: 500;
-      margin-top: 10px;
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
-    .loading-spinner {
-        border: 4px solid rgba(0, 0, 0, 0.1);
-        border-left-color: #2575fc;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        animation: spin 1s linear infinite;
-        display: none;
-        margin: 0 auto;
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #4A90E2;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+
+    button:hover {
+      background-color: #357ABD;
     }
-    @media (max-width: 600px) {
-      .container {
-        padding: 30px;
-      }
-      h1 {
-        font-size: 24px;
-      }
-      button {
-        padding: 12px 25px;
-        font-size: 16px;
-      }
-      #result p {
-        font-size: 16px;
-      }
+
+    .result {
+      margin-top: 25px;
+      padding: 15px;
+      background-color: #eef3fb;
+      border-radius: 10px;
+      border-left: 4px solid #4A90E2;
+    }
+
+    .result p {
+      margin: 6px 0;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>출결 확인 페이지</h1>
-    <div class="input-group">
-      <label for="name">이름:</label>
-      <input type="text" id="name" placeholder="이름을 입력하세요">
-    </div>
-    <div class="input-group">
-      <label for="phone">전화번호:</label>
-      <input type="tel" id="phone" placeholder="전화번호를 입력하세요 (예: 010-1234-5678)">
-    </div>
-    <button onclick="getAttendance()">출결 조회</button>
-    <div id="result">
-        <div class="loading-spinner" id="spinner"></div>
-        <p id="resultText">이름과 전화번호를 입력 후 조회 버튼을 눌러주세요.</p>
-    </div>
+    <h2>출결 확인</h2>
+    <form id="attendanceForm">
+      <label for="name">이름</label>
+      <input type="text" id="name" required />
+      <label for="phone">전화번호</label>
+      <input type="text" id="phone" required />
+      <button type="submit">출결 정보 확인</button>
+    </form>
+    <div class="result" id="result" style="display:none;"></div>
   </div>
 
   <script>
-    const APPS_SCRIPT_API_URL = 'https://script.google.com/macros/s/AKfycbziGDuSyeC7rTfu37wG6J8xSE8x8QinW7oJMcu9KtkVTYvKfe_guyyxPYKOrVg26qc6/exec'; // 배포된 Apps Script 웹 앱 URL을 여기에 붙여넣으세요.
+    const form = document.getElementById("attendanceForm");
+    const resultBox = document.getElementById("result");
 
-    async function getAttendance() {
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const resultDiv = document.getElementById('result');
-      const resultText = document.getElementById('resultText');
-      const spinner = document.getElementById('spinner');
-
-      if (!name || !phone) {
-        resultText.innerHTML = '<span class="error-message">이름과 전화번호를 모두 입력해주세요.</span>';
-        resultDiv.style.backgroundColor = '#ffe0e0';
-        resultDiv.style.borderColor = '#ffc0c0';
-        spinner.style.display = 'none';
-        return;
-      }
-
-      spinner.style.display = 'block';
-      resultText.innerHTML = '';
-      resultDiv.style.backgroundColor = '#f0f8ff';
-      resultDiv.style.borderColor = '#e0efff';
-
-      // 쿼리 파라미터를 포함한 URL 생성
-      const url = `${APPS_SCRIPT_API_URL}?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`;
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
 
       try {
-        const response = await fetch(url);
-        const data = await response.json(); // JSON 응답 파싱
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwn5daNAvW8r5h6XL0L83v6dhgeNiUrIPgFT0Gdv_4KBe5q_AYd43uDpxq_b68a3Dyr/exec", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ name, phone })
+        });
 
-        spinner.style.display = 'none';
+        const data = await response.json();
 
-        if (data.success) {
-          resultText.innerHTML = `
-            <p><span>결석:</span> ${data.data.absent}회</p>
-            <p><span>지각:</span> ${data.data.late}회</p>
-            <p><span>조퇴:</span> ${data.data.earlyLeave}회</p>
+        if (data.status === "success") {
+          resultBox.innerHTML = `
+            <p><strong>이름:</strong> ${data.name}</p>
+            <p><strong>결석:</strong> ${data.결석}</p>
+            <p><strong>지각:</strong> ${data.지각}</p>
+            <p><strong>조퇴:</strong> ${data.조퇴}</p>
           `;
-          resultDiv.style.backgroundColor = '#e6ffe6';
-          resultDiv.style.borderColor = '#c0ffc0';
         } else {
-          resultText.innerHTML = `<span class="error-message">${data.message}</span>`;
-          resultDiv.style.backgroundColor = '#ffe0e0';
-          resultDiv.style.borderColor = '#ffc0c0';
+          resultBox.innerHTML = `<p>${data.message}</p>`;
         }
-      } catch (error) {
-        spinner.style.display = 'none';
-        resultText.innerHTML = `<span class="error-message">데이터를 불러오는 중 오류가 발생했습니다: ${error.message}</span>`;
-        resultDiv.style.backgroundColor = '#ffe0e0';
-        resultDiv.style.borderColor = '#ffc0c0';
-        console.error("Fetch Error:", error);
+        resultBox.style.display = "block";
+      } catch (err) {
+        resultBox.innerHTML = `<p>오류가 발생했습니다. 다시 시도해주세요.</p>`;
+        resultBox.style.display = "block";
       }
-    }
+    });
   </script>
 </body>
 </html>
