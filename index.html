@@ -77,7 +77,7 @@
         return;
       }
 
-      const url = `https://script.google.com/macros/s/AKfycbzH2piUAQjsH8r0U0MCsl3cSeDu5t_nEbXFWZQsr4GbZ5H2AY4qqP2V29E02PodwJnJ/exec`;
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`;
       const res = await fetch(url);
       const data = await res.json();
       const rows = data.values;
